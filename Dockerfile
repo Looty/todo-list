@@ -1,0 +1,8 @@
+FROM python:3.8.12-alpine3.14
+RUN apk update
+COPY ./app /app
+WORKDIR /app
+RUN pip install -r requirements.txt
+EXPOSE 5000
+ENTRYPOINT ["python3"]
+CMD ["app.py"]

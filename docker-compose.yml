@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  flask:
+    build: .
+    ports:
+      - 5000:5000
+    environment:
+      MONGO_URL: mongodb://admin:password@mongodb:27017/db?authSource=admin #TODO
+      FLASK_ENV: production
+      DEBUG: 'false'
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:4.4.10
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: db
+    # volumes:
+    #   - ./init.js:/docker-entrypoint-initdb.d/init.js:ro
+
+  mongo-client:
+    image: mongoclient/mongoclient:latest
+    ports:
+      - 3000:3000
