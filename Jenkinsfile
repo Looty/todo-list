@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        TEST = "OK"
     }
 
     options {
