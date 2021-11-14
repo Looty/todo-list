@@ -1,1 +1,1 @@
-# This is a simple todo project involves Flask + MongoDB
+This is a simple todo project involves Flask + MongoDB
