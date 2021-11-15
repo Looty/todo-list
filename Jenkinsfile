@@ -23,10 +23,12 @@ pipeline {
     stages {
         stage('pull') {
             steps {
-                sh "echo BRANCH_NAME=${env.BRANCH_NAME}"
-                sh "./version-script.sh ${env.BRANCH_NAME}"
-                LATEST_RELEASE_VERSION = sh(script: 'echo $(cat ./temp_version.txt)', returnStdout: true).trim()
-                sh "git clean -f"
+                script {
+                    sh "echo BRANCH_NAME=${env.BRANCH_NAME}"
+                    sh "./version-script.sh ${env.BRANCH_NAME}"
+                    LATEST_RELEASE_VERSION = sh(script: 'echo $(cat ./temp_version.txt)', returnStdout: true).trim()
+                    sh "git clean -f"
+                }
             }
         }
         stage('build') {
