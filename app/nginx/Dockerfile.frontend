@@ -1,0 +1,5 @@
+FROM nginx:1.21.4-alpine
+WORKDIR /usr/share/nginx/html/
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./app/static static/
+RUN rm -rf index.html
