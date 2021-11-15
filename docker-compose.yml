@@ -2,18 +2,14 @@ version: '3'
 
 services:
   nginx:
-    build:
-      context: .
-      dockerfile: ./nginx/Dockerfile.frontend
+    image: 498047829710.dkr.ecr.eu-central-1.amazonaws.com/todolistnginx:${NGINX_VER}
     ports:
       - 80:80
     depends_on:
       - flask
 
   flask:
-    build:
-      context: .
-      dockerfile: Dockerfile.backend
+    image: 498047829710.dkr.ecr.eu-central-1.amazonaws.com/todolistapp:${APPLICATION_VER}
     environment:
       MONGO_URL: mongodb://admin:password@mongodb:27017/db?authSource=db
       FLASK_ENV: production
