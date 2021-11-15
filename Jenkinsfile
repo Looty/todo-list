@@ -8,6 +8,7 @@ pipeline {
         REPO_NAME_APP = "$REPO_URL/todolistapp:latest"
         REPO_NAME_NGINX = "$REPO_URL/todolistnginx:latest"
         DOCKER_NETWORK = ""
+        GITLAB_PULL_FROM_BRANCH = ""
     }
 
     options {
@@ -20,6 +21,20 @@ pipeline {
     }
 
     stages {
+        stage('pull') {
+            steps {
+                sh "echo {env.BRANCH_NAME}"
+                sh "echo {env.TAG_NAME}"
+                sh "echo {env.GIT_COMMIT}"
+                sh "echo {env.GIT_BRANCH}"
+                // GITLAB_PULL_FROM_BRANCH = env.BRANCH_NAME
+                // sh "./version-script.sh ${env.version} ${GITLAB_PULL_FROM_BRANCH}"
+                // COWSAY_TAG_VERSION = sh(script: 'echo $(sed -n 2p ./v.txt)', returnStdout: true).trim()
+                // //empty if new branch x.y
+                // COWSAY_RELEASE_BRANCH = sh(script: 'echo $(sed -n 2p ./v.txt | cut -c1-3)', returnStdout: true).trim()
+                // REPO_NAME = "$REPO_URL/cowsay:$COWSAY_TAG_VERSION"
+            }
+        }
         stage('build') {
             steps {
                 sh "echo ==== BUILD STAGE ====="
