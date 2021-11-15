@@ -23,15 +23,11 @@ pipeline {
     stages {
         stage('pull') {
             steps {
-                echo env.BRANCH_NAME
-                echo env.TAG_NAME
-                echo env.GIT_COMMIT
-                echo env.GIT_BRANCH
-                // GITLAB_PULL_FROM_BRANCH = env.BRANCH_NAME
-                // sh "./version-script.sh ${env.version} ${GITLAB_PULL_FROM_BRANCH}"
-                // COWSAY_TAG_VERSION = sh(script: 'echo $(sed -n 2p ./v.txt)', returnStdout: true).trim()
-                // //empty if new branch x.y
-                // COWSAY_RELEASE_BRANCH = sh(script: 'echo $(sed -n 2p ./v.txt | cut -c1-3)', returnStdout: true).trim()
+                GITLAB_PULL_FROM_BRANCH = env.BRANCH_NAME
+                sh "./version-script.sh ${GITLAB_PULL_FROM_BRANCH}"
+                COWSAY_TAG_VERSION = sh(script: 'echo $(sed -n 2p ./v.txt)', returnStdout: true).trim()
+                //empty if new branch x.y
+                COWSAY_RELEASE_BRANCH = sh(script: 'echo $(sed -n 2p ./v.txt | cut -c1-3)', returnStdout: true).trim()
                 // REPO_NAME = "$REPO_URL/cowsay:$COWSAY_TAG_VERSION"
             }
         }
