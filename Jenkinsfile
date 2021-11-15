@@ -29,7 +29,7 @@ pipeline {
                 script {
                     sh "echo BRANCH_NAME=${env.BRANCH_NAME}"
                     sh "./version-script.sh ${env.BRANCH_NAME}"
-                    LATEST_RELEASE_VERSION = sh(script: 'echo $(cat ./temp_version.txt)', returnStdout: true).trim()
+                    LATEST_RELEASE_VERSION = sh(script: 'echo $(cat ./new_version.txt)', returnStdout: true).trim()
                     sh "git clean -f"
                 }
             }
@@ -52,7 +52,7 @@ pipeline {
                     sh "echo ==== E2E STAGE ====="
                     sh """sed -i "s/x.x/$LATEST_RELEASE_VERSION/g" .env"""
                     sh "docker-compose up -d --build"
-                    DOCKER_NETWORK = sh(script: 'echo $(docker network ls --no-trunc | grep "todo-list" | cut -d " " -f 4)', returnStdout: true).trim()
+                    DOCKER_NETWORK = sh(script: 'echo $(docker network ls --no-trunc | grep "todo-list" | tail -n 1 | cut -d " " -f 4)', returnStdout: true).trim()
                     sh "docker run --network $DOCKER_NETWORK --rm curlimages/curl:7.80.0 nginx:80"
                     sh "docker-compose down -v"
                 }
