@@ -23,10 +23,10 @@ pipeline {
     stages {
         stage('pull') {
             steps {
-                sh "echo {env.BRANCH_NAME}"
-                sh "echo {env.TAG_NAME}"
-                sh "echo {env.GIT_COMMIT}"
-                sh "echo {env.GIT_BRANCH}"
+                echo env.BRANCH_NAME
+                echo env.TAG_NAME
+                echo env.GIT_COMMIT
+                echo env.GIT_BRANCH
                 // GITLAB_PULL_FROM_BRANCH = env.BRANCH_NAME
                 // sh "./version-script.sh ${env.version} ${GITLAB_PULL_FROM_BRANCH}"
                 // COWSAY_TAG_VERSION = sh(script: 'echo $(sed -n 2p ./v.txt)', returnStdout: true).trim()
