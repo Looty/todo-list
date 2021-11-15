@@ -30,11 +30,13 @@ pipeline {
 
         stage('E2E') {
             steps {
-                sh "echo ==== E2E STAGE ====="
-                sh "docker-compose up -d"
-                DOCKER_NETWORK = sh(script: 'echo $(docker network ls --no-trunc | grep todo-list | cut -d " " -f 4)', returnStdout: true).trim()
-                sh "docker run --network $DOCKER_NETWORK --rm curlimages/curl:7.80.0 nginx:80"
-                sh "docker-compose down -v"
+                script {
+                    sh "echo ==== E2E STAGE ====="
+                    sh "docker-compose up -d"
+                    DOCKER_NETWORK = sh(script: 'echo $(docker network ls --no-trunc | grep todo-list | cut -d " " -f 4)', returnStdout: true).trim()
+                    sh "docker run --network $DOCKER_NETWORK --rm curlimages/curl:7.80.0 nginx:80"
+                    sh "docker-compose down -v"
+                }
             }
         }
 
