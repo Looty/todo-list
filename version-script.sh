@@ -32,8 +32,6 @@ if [[ $version =~ ^[0-9].[0-9]$ ]]; then
         tag="${major}.${minor}.$(($patch+1))"
         echo "next tag: $tag"
 
-        touch temp_version.txt
-        echo $tag >> temp_version.txt
-        cat ./temp_version.txt
+        echo $tag > new_version.txt
     fi
 fi
