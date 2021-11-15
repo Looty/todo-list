@@ -22,8 +22,8 @@ pipeline {
         stage('build') {
             steps {
                 sh "echo ==== BUILD STAGE ====="
-                sh "docker build -t $REPO_NAME_APP ."
-                sh "docker build -t $REPO_NAME_NGINX ."
+                sh "docker build -t $REPO_NAME_APP -f Dockerfile.backend ."
+                sh "docker build -t $REPO_NAME_NGINX -f Dockerfile.frontend ."
             }
         }
 
