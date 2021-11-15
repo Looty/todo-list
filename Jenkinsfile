@@ -36,11 +36,13 @@ pipeline {
         }
         stage('build') {
             steps {
-                sh "echo ==== BUILD STAGE ====="
-                REPO_NAME_APP = "$REPO_URL/todolistapp:$LATEST_RELEASE_VERSION"
-                REPO_NAME_NGINX = "$REPO_URL/todolistnginx:$LATEST_RELEASE_VERSION"
-                sh "docker build -t $REPO_NAME_APP -f Dockerfile.backend ."
-                sh "docker build -t $REPO_NAME_NGINX -f ./nginx/Dockerfile.frontend ."
+                script {
+                    sh "echo ==== BUILD STAGE ====="
+                    REPO_NAME_APP = "$REPO_URL/todolistapp:$LATEST_RELEASE_VERSION"
+                    REPO_NAME_NGINX = "$REPO_URL/todolistnginx:$LATEST_RELEASE_VERSION"
+                    sh "docker build -t $REPO_NAME_APP -f Dockerfile.backend ."
+                    sh "docker build -t $REPO_NAME_NGINX -f ./nginx/Dockerfile.frontend ."
+                }
             }
         }
 
