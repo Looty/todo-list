@@ -5,10 +5,10 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
         AWS_SECRET_ACCESS_KEY = credentials('aws_access_key')
         REPO_URL = "498047829710.dkr.ecr.eu-central-1.amazonaws.com"
-        REPO_NAME_APP = "$REPO_URL/todolistapp:latest"
-        REPO_NAME_NGINX = "$REPO_URL/todolistnginx:latest"
+        LATEST_RELEASE_VERSION = "latest"
+        REPO_NAME_APP = "$REPO_URL/todolistapp:$LATEST_RELEASE_VERSION"
+        REPO_NAME_NGINX = "$REPO_URL/todolistnginx:$LATEST_RELEASE_VERSION"
         DOCKER_NETWORK = ""
-        LATEST_RELEASE_VERSION = ""
     }
 
     options {
@@ -22,6 +22,9 @@ pipeline {
 
     stages {
         stage('pull') {
+            when {
+                branch 'release/*'
+            }
             steps {
                 script {
                     sh "echo BRANCH_NAME=${env.BRANCH_NAME}"
@@ -34,6 +37,8 @@ pipeline {
         stage('build') {
             steps {
                 sh "echo ==== BUILD STAGE ====="
+                REPO_NAME_APP = "$REPO_URL/todolistapp:$LATEST_RELEASE_VERSION"
+                REPO_NAME_NGINX = "$REPO_URL/todolistnginx:$LATEST_RELEASE_VERSION"
                 sh "docker build -t $REPO_NAME_APP -f Dockerfile.backend ."
                 sh "docker build -t $REPO_NAME_NGINX -f ./nginx/Dockerfile.frontend ."
             }
@@ -51,14 +56,31 @@ pipeline {
             }
         }
 
-        stage ('publish') {
+        stage ('tagging') {
+            when {
+                branch 'release/*'
+            }
             steps {
                 script {
                     sshagent(credentials: ['ssh-github']) {
-                        sh "echo ==== PUBLISH STAGE ====="
+                        sh "echo ==== TAGGING STAGE ====="
                         sh "git tag $LATEST_RELEASE_VERSION"
                         sh "git push origin ${env.BRANCH_NAME} tag $LATEST_RELEASE_VERSION"
                     }
+                }
+            }
+        }
+
+        stage ('publish') {
+            steps {
+                script {
+                    sh "echo ==== PUBLISH STAGE ====="
+                    sh "echo Publishing the image to the ECR..."
+                    sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID"
+                    sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY"
+                    sh "aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin $REPO_URL"
+                    sh "docker push $REPO_NAME_APP"
+                    sh "docker push $REPO_NAME_NGINX"
                 }
             }
         }
@@ -74,22 +96,11 @@ pipeline {
                 }
             }
         }
-
-        stage ("e2e") {
-            // when {
-            //     changelog '.*#test*.'
-            // }
-            steps {
-                sh "echo ==== E2E STAGE ====="
-                
-            }
-        }
     }
 
     post {
         failure {
             sh "echo ==== DESTROY ====="
-            
         }
     }
 }
