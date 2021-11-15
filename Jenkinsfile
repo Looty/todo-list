@@ -2,7 +2,11 @@ pipeline {
     agent any
 
     environment {
-        TEST = "OK"
+        AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
+        AWS_SECRET_ACCESS_KEY = credentials('aws_access_key')
+        REPO_URL = "498047829710.dkr.ecr.eu-central-1.amazonaws.com"
+        REPO_NAME_APP = "$REPO_URL/todolistapp:latest"
+        REPO_NAME_NGINX = "$REPO_URL/todolistnginx:latest"
     }
 
     options {
@@ -18,12 +22,15 @@ pipeline {
         stage('build') {
             steps {
                 sh "echo ==== BUILD STAGE ====="
+                sh "docker build -t $REPO_NAME_APP ."
+                sh "docker build -t $REPO_NAME_NGINX ."
             }
         }
 
-        stage('run') {
+        stage('E2E') {
             steps {
-                sh "echo ==== RUN STAGE ====="
+                sh "echo ==== E2E STAGE ====="
+                sh "docker-compose up -d --network jenkins_jenkins_net" 
             }
         }
 
