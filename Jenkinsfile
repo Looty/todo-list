@@ -23,7 +23,7 @@ pipeline {
     stages {
         stage('pull') {
             steps {
-                GITLAB_PULL_FROM_BRANCH = env.BRANCH_NAME
+                GITLAB_PULL_FROM_BRANCH = env.BRANCH_NAME //1.0
                 // sh "./version-script.sh ${GITLAB_PULL_FROM_BRANCH}"
                 // COWSAY_TAG_VERSION = sh(script: 'echo $(sed -n 2p ./v.txt)', returnStdout: true).trim()
                 // empty if new branch x.y
