@@ -5,8 +5,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    volumes:
-      - ${PWD}/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - 80:80
     depends_on:
