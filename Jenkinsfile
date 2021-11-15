@@ -30,7 +30,8 @@ pipeline {
         stage('E2E') {
             steps {
                 sh "echo ==== E2E STAGE ====="
-                sh "docker-compose up -d --network jenkins_jenkins_net" 
+                sh "docker-compose up -d"
+                sh "curl nginx:80"
             }
         }
 
