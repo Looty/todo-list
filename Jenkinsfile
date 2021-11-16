@@ -27,10 +27,12 @@ pipeline {
             }
             steps {
                 script {
-                    sh "echo BRANCH_NAME=${env.BRANCH_NAME}"
-                    sh "./version-script.sh ${env.BRANCH_NAME}"
-                    LATEST_RELEASE_VERSION = sh(script: 'echo $(cat ./new_version.txt)', returnStdout: true).trim()
-                    sh "git clean -f"
+                    sshagent(credentials: ['ssh-github']) {
+                        sh "echo BRANCH_NAME=${env.BRANCH_NAME}"
+                        sh "./version-script.sh ${env.BRANCH_NAME}"
+                        LATEST_RELEASE_VERSION = sh(script: 'echo $(cat ./new_version.txt)', returnStdout: true).trim()
+                        sh "git clean -f"
+                    }
                 }
             }
         }
