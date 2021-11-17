@@ -101,12 +101,13 @@ pipeline {
                             echo ==== DEPLOY TO ARGOCD STAGE =====
                             rm -rf todo-list-charts/
                             git clone git@github.com:Looty/todo-list-charts.git
-                            cd todo-list-charts/todo/
+                            cd todo-list-charts/
                             ls -lsahF
                         """
                         
                         sh "echo 1"
-                        def data = readYaml file: "values.yaml"
+                        def filename = './todo/values.yaml'
+                        def data = readYaml (file: filename)
                         data.image.tag = ${LATEST_RELEASE_VERSION}
 
                         sh "echo 2"
@@ -114,11 +115,11 @@ pipeline {
                         writeYaml file: filename, data: data
                         
                         sh "echo 3"
-                        sh "cd ../nginx"
                         sh "ls -lsahF"
                         
                         sh "echo 4"
-                        data = readYaml file: "values.yaml"
+                        filename = './nginx/values.yaml'
+                        data = readYaml (file: filename)
                         data.image.tag = ${LATEST_RELEASE_VERSION}
 
                         sh "echo 5"
