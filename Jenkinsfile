@@ -96,7 +96,7 @@ pipeline {
             }
             steps {
                 script {
-                    build job: 'argocd', parameters: [[$class: 'StringParameterValue', name: 'NEW_VERSION', value: "${env.LATEST_RELEASE_VERSION}"]]
+                    build job: 'argocd', parameters: [[$class: 'StringParameterValue', name: 'NEW_VERSION', value: "${LATEST_RELEASE_VERSION}"]]
                 }
             }
         }
