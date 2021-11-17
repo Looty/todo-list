@@ -102,35 +102,26 @@ pipeline {
                             rm -rf todo-list-charts/
                             git clone git@github.com:Looty/todo-list-charts.git
                             cd todo-list-charts/
-                            ls -lsahF
                         """
                         
-                        sh "echo 1"
                         def filename = 'todo-list-charts/todo/values.yaml'
                         def data = readYaml (file: filename)
                         data.image.tag = LATEST_RELEASE_VERSION
 
-                        sh "echo 2"
                         sh "rm $filename"
                         writeYaml file: filename, data: data
-                        
-                        sh "echo 3"
-                        sh "ls -lsahF"
-                        
-                        sh "echo 4"
+
                         filename = 'todo-list-charts/nginx/values.yaml'
                         data = readYaml (file: filename)
                         data.image.tag = LATEST_RELEASE_VERSION
-
-                        sh "echo 5"
+                        
                         sh "rm $filename"
                         writeYaml file: filename, data: data
 
-                        sh "echo 6"
                         sh """
                             git add .
                             git commit -am "Updated app+nginx image tag to $LATEST_RELEASE_VERSION"
-                            git push origin main
+                            git push
                         """
                     }
                 }
