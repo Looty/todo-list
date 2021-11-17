@@ -98,7 +98,7 @@ pipeline {
                 script {
                     sshagent(credentials: ['ssh-github']) {
                         sh
-                        """
+                        '''
                             echo ==== DEPLOY TO ARGOCD STAGE =====
                             rm -rf todo-list-charts/
                             git clone git@github.com:Looty/todo-list-charts.git
@@ -119,12 +119,11 @@ pipeline {
 
                             rm $filename
                             writeYaml file: filename, data: data
-                        
-                            popd
+
                             git add .
                             git commit -am "Updated app+nginx image tag to ${LATEST_RELEASE_VERSION}"
                             git push origin main
-                        """
+                        '''
                     }
                 }
             }
