@@ -103,10 +103,9 @@ pipeline {
                             git clone git@github.com:Looty/todo-list-charts.git
                             cd todo-list-charts/todo/
                             ls -lsahF
-                        """   
-                            
-                        def filename = 'values.yaml'
-                        def data = readYaml file: filename
+                        """
+                        
+                        def data = readYaml file: 'values.yaml'
                         data.image.tag = ${LATEST_RELEASE_VERSION}
 
                         sh "rm $filename"
@@ -114,8 +113,8 @@ pipeline {
                         
                         sh "cd ../nginx"
                         sh "ls -lsahF"
-                        filename = 'todo-list-charts/nginx/values.yaml'
-                        data = readYaml file: filename
+                        
+                        data = readYaml file: 'values.yaml'
                         data.image.tag = ${LATEST_RELEASE_VERSION}
 
                         sh "rm $filename"
