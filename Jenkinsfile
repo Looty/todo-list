@@ -100,10 +100,8 @@ pipeline {
                         sh """
                             echo ==== DEPLOY TO ARGOCD STAGE =====
                             git clone git@github.com:Looty/todo-list-charts.git
-                            cd todo-list-charts/
-                            echo $PWD
-                            ls -lsahF
-                            pushd todo  
+                            export CLONE_PATH=$PWD
+                            cd todo-list-charts/todo
                         """   
                             
                         def filename = 'values.yaml'
@@ -111,13 +109,9 @@ pipeline {
                         data.image.tag = ${LATEST_RELEASE_VERSION}
 
                         sh "rm $filename"
-                            writeYaml file: filename, data: data
+                        writeYaml file: filename, data: data
 
-                        sh """
-                            popd
-                            pushd nginx
-                        """
-
+                        sh "cd ../nginx"
                         filename = 'values.yaml'
                         data = readYaml file: filename
                         data.image.tag = ${LATEST_RELEASE_VERSION}
@@ -130,6 +124,8 @@ pipeline {
                             git add .
                             git commit -am "Updated app+nginx image tag to ${LATEST_RELEASE_VERSION}"
                             git push origin main
+                            cd $CLONE_PATH
+                            rm -rf todo-list-charts/
                         """
                     }
                 }
