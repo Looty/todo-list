@@ -115,8 +115,8 @@ pipeline {
                             pushd nginx
                         """
 
-                        def filename = 'values.yaml'
-                        def data = readYaml file: filename
+                        filename = 'values.yaml'
+                        data = readYaml file: filename
                         data.image.tag = ${LATEST_RELEASE_VERSION}
 
                         sh "rm $filename"
