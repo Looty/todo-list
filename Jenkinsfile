@@ -101,6 +101,7 @@ pipeline {
                             echo ==== DEPLOY TO ARGOCD STAGE =====
                             git clone git@github.com:Looty/todo-list-charts.git
                             cd todo-list-charts/
+                            echo $PWD
                             pushd todo  
                         """   
                             
