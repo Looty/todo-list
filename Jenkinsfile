@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
-        AWS_SECRET_ACCESS_KEY = credentials('aws_access_key')
-        REPO_URL = "498047829710.dkr.ecr.eu-central-1.amazonaws.com"
+        AWS_ACCESS_KEY_ID      = credentials('aws_access_key_id')
+        AWS_SECRET_ACCESS_KEY  = credentials('aws_access_key')
+        REPO_URL               = credentials('aws_ecr_url')
         LATEST_RELEASE_VERSION = "latest"
-        REPO_NAME_APP = "$REPO_URL/todolistapp:$LATEST_RELEASE_VERSION"
-        REPO_NAME_NGINX = "$REPO_URL/todolistnginx:$LATEST_RELEASE_VERSION"
-        DOCKER_NETWORK = ""
+        REPO_NAME_APP          = "$REPO_URL/todolistapp:$LATEST_RELEASE_VERSION"
+        REPO_NAME_NGINX        = "$REPO_URL/todolistnginx:$LATEST_RELEASE_VERSION"
+        DOCKER_NETWORK         = ""
     }
 
     options {
