@@ -91,13 +91,44 @@ pipeline {
         }
 
         stage('deploy') {
-            // when {
-            //     changelog '.*#test*.'
-            // }
+            when {
+                branch 'release/*'
+            }
             steps {
                 script {
-                    sh "echo ==== DEPLOY STAGE ====="
-                    
+                    sshagent(credentials: ['ssh-github']) {
+                        sh """
+                            echo ==== DEPLOY TO ARGOCD STAGE =====
+                            git clone git@github.com:Looty/todo-list-charts.git
+                            pushd todo     
+                            
+                            def filename = 'values.yaml'
+                            def data = readYaml file: filename
+
+                            // Change something in the file
+                            data.image.tag = ${LATEST_RELEASE_VERSION}
+
+                            rm $filename
+                            writeYaml file: filename, data: data
+
+                            popd
+                            pushd nginx
+
+                            def filename = 'values.yaml'
+                            def data = readYaml file: filename
+
+                            // Change something in the file
+                            data.image.tag = ${LATEST_RELEASE_VERSION}
+
+                            rm $filename
+                            writeYaml file: filename, data: data
+
+                            popd
+                            git add .
+                            git commit -am "Updated app+nginx image tag to ${LATEST_RELEASE_VERSION}"
+                            git push origin main
+                        """
+                    }
                 }
             }
         }
