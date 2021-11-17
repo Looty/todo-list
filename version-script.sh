@@ -22,7 +22,7 @@ if [[ $version =~ ^[0-9].[0-9]$ ]]; then
         git pull
         git fetch --tags
         git tag --merged $target_branch | tail -n 1
-        prevtag=$(git tag --merged $target_branch | tail -n 1)
+        prevtag=$(git tag --merged $target_branch --sort=committerdate | tail -n 1)
         echo "previous tag: $prevtag"
         echo "$version exists!"
         echo "there is a x.y.z"
