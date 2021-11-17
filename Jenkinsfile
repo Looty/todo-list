@@ -106,7 +106,7 @@ pipeline {
                         """
                         
                         sh "echo 1"
-                        def filename = '.todo-list-charts/todo/values.yaml'
+                        def filename = 'todo-list-charts/todo/values.yaml'
                         def data = readYaml (file: filename)
                         data.image.tag = ${LATEST_RELEASE_VERSION}
 
@@ -118,7 +118,7 @@ pipeline {
                         sh "ls -lsahF"
                         
                         sh "echo 4"
-                        filename = '.todo-list-charts/nginx/values.yaml'
+                        filename = 'todo-list-charts/nginx/values.yaml'
                         data = readYaml (file: filename)
                         data.image.tag = ${LATEST_RELEASE_VERSION}
 
