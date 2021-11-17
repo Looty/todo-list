@@ -100,6 +100,7 @@ pipeline {
                         sh """
                             echo ==== DEPLOY TO ARGOCD STAGE =====
                             rm -rf todo-list-charts/
+                            cd ..
                             git clone git@github.com:Looty/todo-list-charts.git
                             cd todo-list-charts/
                         """
