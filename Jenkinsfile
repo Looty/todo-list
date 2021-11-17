@@ -97,33 +97,40 @@ pipeline {
             steps {
                 script {
                     sshagent(credentials: ['ssh-github']) {
-                        sh
-                        '''
+                        sh """
                             echo ==== DEPLOY TO ARGOCD STAGE =====
                             rm -rf todo-list-charts/
                             git clone git@github.com:Looty/todo-list-charts.git
                             cd todo-list-charts/todo/
                             ls -lsahF
+                        """
+                        
+                        sh "echo 1"
+                        def data = readYaml file: "values.yaml"
+                        data.image.tag = ${LATEST_RELEASE_VERSION}
 
-                            def data = readYaml file: "values.yaml"
-                            data.image.tag = ${LATEST_RELEASE_VERSION}
+                        sh "echo 2"
+                        sh "rm $filename"
+                        writeYaml file: filename, data: data
+                        
+                        sh "echo 3"
+                        sh "cd ../nginx"
+                        sh "ls -lsahF"
+                        
+                        sh "echo 4"
+                        data = readYaml file: "values.yaml"
+                        data.image.tag = ${LATEST_RELEASE_VERSION}
 
-                            rm $filename
-                            writeYaml file: filename, data: data
-                            
-                            cd ../nginx
-                            ls -lsahF
-                            
-                            data = readYaml file: "values.yaml"
-                            data.image.tag = ${LATEST_RELEASE_VERSION}
+                        sh "echo 5"
+                        sh "rm $filename"
+                        writeYaml file: filename, data: data
 
-                            rm $filename
-                            writeYaml file: filename, data: data
-
+                        sh "echo 6"
+                        sh """
                             git add .
                             git commit -am "Updated app+nginx image tag to ${LATEST_RELEASE_VERSION}"
                             git push origin main
-                        '''
+                        """
                     }
                 }
             }
