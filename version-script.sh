@@ -21,7 +21,6 @@ if [[ $version =~ ^[0-9].[0-9]$ ]]; then
         git checkout $target_branch
         git pull
         git fetch --tags
-        git tag --merged $target_branch | tail -n 1
         prevtag=$(git tag --merged $target_branch --sort=committerdate | tail -n 1)
         echo "previous tag: $prevtag"
         echo "$version exists!"
