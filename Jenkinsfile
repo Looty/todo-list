@@ -99,6 +99,7 @@ pipeline {
                     sshagent(credentials: ['ssh-github']) {
                         sh """
                             echo ==== DEPLOY TO ARGOCD STAGE =====
+                            rm -rf todo-list-charts/
                             git clone git@github.com:Looty/todo-list-charts.git
                         """   
                             
