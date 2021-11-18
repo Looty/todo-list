@@ -2,7 +2,7 @@ version: '3'
 
 services:
   nginx:
-    image: 498047829710.dkr.ecr.eu-central-1.amazonaws.com/todolistnginx:${NGINX_VER}
+    image: 006262944085.dkr.ecr.eu-west-2.amazonaws.com/todolistnginx:${NGINX_VER}
     ports:
       - 80:80
     volumes:
@@ -11,7 +11,7 @@ services:
       - flask
 
   flask:
-    image: 498047829710.dkr.ecr.eu-central-1.amazonaws.com/todolistapp:${APPLICATION_VER}
+    image: 006262944085.dkr.ecr.eu-west-2.amazonaws.com/todolistapp:${APPLICATION_VER}
     environment:
       MONGO_URL: mongodb://admin:password@mongodb:27017/db?authSource=db
       FLASK_ENV: production
