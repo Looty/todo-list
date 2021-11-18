@@ -55,7 +55,7 @@ pipeline {
                     sh "echo ==== E2E STAGE ====="
                     sh """sed -i "s/x.x/$LATEST_RELEASE_VERSION/g" .env"""
                     sh "docker-compose up -d --build"
-                    DOCKER_NETWORK = sh(script: 'echo $(docker network ls --no-trunc | grep "todo-list" | tail -n 1 | cut -d " " -f 4)', returnStdout: true).trim()
+                    DOCKER_NETWORK = sh(script: 'echo $(docker network ls --no-trunc | grep "todo" | tail -n 1 | cut -d " " -f 4)', returnStdout: true).trim()
                     sh "docker run --network $DOCKER_NETWORK --rm curlimages/curl:7.80.0 nginx:80"
                     sh "docker-compose down -v"
                 }
