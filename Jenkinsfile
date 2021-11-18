@@ -5,6 +5,7 @@ pipeline {
         AWS_ACCESS_KEY_ID      = credentials('aws_access_key_id')
         AWS_SECRET_ACCESS_KEY  = credentials('aws_access_key')
         REPO_URL               = credentials('aws_ecr_url')
+        REPO_REGION            = credentials('aws_ecr_region')
         LATEST_RELEASE_VERSION = "latest"
         REPO_NAME_APP          = "$REPO_URL/todolistapp:$LATEST_RELEASE_VERSION"
         REPO_NAME_NGINX        = "$REPO_URL/todolistnginx:$LATEST_RELEASE_VERSION"
@@ -83,7 +84,7 @@ pipeline {
                     sh "echo Publishing the image to the ECR..."
                     sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID"
                     sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY"
-                    sh "aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin $REPO_URL"
+                    sh "aws ecr get-login-password --region $REPO_REGION | docker login --username AWS --password-stdin $REPO_URL"
                     sh "docker push $REPO_NAME_APP"
                     sh "docker push $REPO_NAME_NGINX"
                 }
