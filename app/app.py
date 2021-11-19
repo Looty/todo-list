@@ -69,7 +69,6 @@ if __name__=='__main__':
     print("PORT: " + ENV_PORT, file=sys.stdout)
     print("DEBUG MODE: " + ENV_DEBUG, file=sys.stdout)
     print("VERSION: " + ENV_VERSION, file=sys.stdout)
-    print(todos, file=sys.stdout)
 
     if ENV_DEBUG == 'true':
         app.run(debug=True, host=ENV_HOST, port=ENV_PORT)
