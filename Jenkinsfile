@@ -67,7 +67,7 @@ pipeline {
                         echo ==== E2E STAGE =====
                         """sed -i "s/x.x/$LATEST_RELEASE_VERSION/g" .env"""
                         """sed -i "s/URL/$REPO_URL/g" .env"""
-                        """sed -i "s/./app/nginx.conf/$JENKINS_NGINX_PATH/g" .env"""
+                        """sed -i "s/PATH/$JENKINS_NGINX_PATH/g" .env"""
                         docker-compose up -d --build
                     '''
                     DOCKER_NETWORK = sh(script: 'echo $(docker network ls --no-trunc | grep "todo" | tail -n 1 | cut -d " " -f 4)', returnStdout: true).trim()
