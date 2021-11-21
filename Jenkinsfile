@@ -23,9 +23,6 @@ pipeline {
 
     stages {
         stage('pull') {
-            when {
-                branch 'release/*'
-            }
             steps {
                 script {
                     sshagent(credentials: ['ssh-github']) {
@@ -63,9 +60,6 @@ pipeline {
         }
 
         stage ('tagging') {
-            when {
-                branch 'release/*'
-            }
             steps {
                 script {
                     sshagent(credentials: ['ssh-github']) {
@@ -92,9 +86,6 @@ pipeline {
         }
 
         stage('deploy') {
-            when {
-                branch 'release/*'
-            }
             steps {
                 script {
                     build job: 'argocd', parameters: [[$class: 'StringParameterValue', name: 'NEW_VERSION', value: "${LATEST_RELEASE_VERSION}"]]
