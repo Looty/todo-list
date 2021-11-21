@@ -29,10 +29,8 @@ pipeline {
             steps {
                 script {
                     sshagent(credentials: ['ssh-github']) {
-                        sh '''
-                            echo BRANCH_NAME=${env.BRANCH_NAME}
-                            ./version-script.sh ${env.BRANCH_NAME}
-                        '''
+                        sh "echo BRANCH_NAME=${env.BRANCH_NAME}"
+                        sh "./version-script.sh ${env.BRANCH_NAME}"
                         LATEST_RELEASE_VERSION = sh(script: 'echo $(cat ./new_version.txt)', returnStdout: true).trim()
                         sh "git clean -f"
                     }
@@ -48,10 +46,8 @@ pipeline {
                     sh "echo ==== BUILD STAGE ====="
                     REPO_NAME_APP = "$REPO_URL/todolistapp:$LATEST_RELEASE_VERSION"
                     REPO_NAME_NGINX = "$REPO_URL/todolistnginx:$LATEST_RELEASE_VERSION"
-                    sh '''
-                        docker build -t $REPO_NAME_APP -f Dockerfile.backend .
-                        docker build -t $REPO_NAME_NGINX -f ./nginx/Dockerfile.frontend .
-                    '''
+                    sh "docker build -t $REPO_NAME_APP -f Dockerfile.backend ."
+                    sh "docker build -t $REPO_NAME_NGINX -f ./nginx/Dockerfile.frontend ."
                 }
             }
         }
@@ -67,10 +63,8 @@ pipeline {
                     sh """sed -i 's/URL/$REPO_URL/g' .env"""
                     sh "docker-compose up -d --build"
                     DOCKER_NETWORK = sh(script: 'echo $(docker network ls --no-trunc | grep "todo" | tail -n 1 | cut -d " " -f 4)', returnStdout: true).trim()
-                    sh '''
-                        docker run --network $DOCKER_NETWORK --rm curlimages/curl:7.80.0 nginx:80
-                        docker-compose down -v
-                    '''
+                    sh "docker run --network $DOCKER_NETWORK --rm curlimages/curl:7.80.0 nginx:80"
+                    sh "docker-compose down -v"
                 }
             }
         }
@@ -82,11 +76,9 @@ pipeline {
             steps {
                 script {
                     sshagent(credentials: ['ssh-github']) {
-                        sh '''
-                            echo ==== TAGGING STAGE =====
-                            git tag $LATEST_RELEASE_VERSION
-                            git push origin ${env.BRANCH_NAME} tag $LATEST_RELEASE_VERSION
-                        '''
+                        sh "echo ==== TAGGING STAGE ====="
+                        sh "git tag $LATEST_RELEASE_VERSION"
+                        sh "git push origin ${env.BRANCH_NAME} tag $LATEST_RELEASE_VERSION"
                     }
                 }
             }
@@ -98,15 +90,13 @@ pipeline {
             }
             steps {
                 script {
-                    sh '''
-                        echo ==== PUBLISH STAGE =====
-                        echo Publishing the image to the ECR...
-                        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-                        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-                        aws ecr get-login-password --region $REPO_REGION | docker login --username AWS --password-stdin $REPO_URL
-                        docker push $REPO_NAME_APP
-                        docker push $REPO_NAME_NGINX
-                    '''
+                    sh "echo ==== PUBLISH STAGE ====="
+                    sh "echo Publishing the image to the ECR..."
+                    sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID"
+                    sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY"
+                    sh "aws ecr get-login-password --region $REPO_REGION | docker login --username AWS --password-stdin $REPO_URL"
+                    sh "docker push $REPO_NAME_APP"
+                    sh "docker push $REPO_NAME_NGINX"
                 }
             }
         }
