@@ -11,7 +11,6 @@ pipeline {
         REPO_NAME_NGINX        = "$REPO_URL/todolistnginx:$LATEST_RELEASE_VERSION"
         DOCKER_NETWORK         = ""
         JENKINS_NGINX_PATH     = credentials('nginx_volume_path')
-        //home/ec2-user/jenkins/nginx.conf
     }
 
     options {
